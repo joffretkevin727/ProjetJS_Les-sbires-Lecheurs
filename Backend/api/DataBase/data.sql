@@ -43,3 +43,12 @@ CREATE TABLE skins (
     prix INT NOt NULL,
     FOREIGN KEY (champion_id) REFERENCES champions(id) ON DELETE CASCADE
 );
+
+CREATE TABLE adresses (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    street VARCHAR(100) NOT NULL,
+    city VARCHAR(50) NOT NULL,
+    code_postal VARCHAR(6),
+    country VARCHAR(50)
+);
