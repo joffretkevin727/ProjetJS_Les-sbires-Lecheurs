@@ -6,7 +6,7 @@ USE champ_commerce;
 
 -- INSERT champions
 
-INSERT INTO champions (name, difficulte, description, price, stock, reduction, devise, genre, image1, image2, image3)
+INSERT INTO champions (name, difficulte, description, price, stock, reduction, devise, genre, espece, image1, image2, image3)
 VALUES (
     'Caitlyn',
     'Faible',
@@ -16,6 +16,7 @@ VALUES (
     0,
     'RP',
     'Féminin',
+    'Humain',
     '/assets/img/caitlyn_1.png',
     '/assets/img/caitlyn_2.png',
     '/assets/img/caitlyn_3.png'

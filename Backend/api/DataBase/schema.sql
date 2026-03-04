@@ -18,7 +18,8 @@ CREATE TABLE champions (
     stock INT NOT NULL DEFAULT 50,
     reduction DECIMAL(5,2) DEFAULT 0,
     devise VARCHAR(10) DEFAULT 'RP',
-    genre ENUM('Masculin','Féminin','Non-binaire','Machine','Entité Cosmique','Yordle','Esprit') NOT NULL,
+    genre ENUM('Masculin','Féminin','Non-binaire') NOT NULL,
+    espece ENUM('humain','dieu','yordle','mort-vivant','être du néant','être celeste','darkin','demon','esprit','golem','vastaya','transfiguré','manifestation','autre') NOT NULL,
     image1 VARCHAR(255),
     image2 VARCHAR(255),
     image3 VARCHAR(255)

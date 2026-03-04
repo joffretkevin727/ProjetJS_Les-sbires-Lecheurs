@@ -1,7 +1,0 @@
-Masculin 6
-Féminin 5
-Non-binaire 2
-Machine 4
-Entité Cosmique 3
-Yordle 5
-Esprit 3
