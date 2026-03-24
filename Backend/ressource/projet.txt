@@ -1,0 +1,12 @@
+les branches se font ainsi :
+
+                                main
+                                  |
+                                  |
+                        -------  dev -------
+                        |                  |
+                        |                  |
+             ---------feature/back  feature/front
+             |          |                  | 
+             |          |                  |  
+    back/insertdata back/database     front/html
