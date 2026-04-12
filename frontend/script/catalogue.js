@@ -98,6 +98,8 @@ const renderChampions = (champions) => {
         <div class="card champion-card" data-id="${champ.id}" style="cursor: pointer;">
             <div class="banner">
                 <div class="img-champ">
+                    <button class="fav-btn" data-id="${champ.id}">❤</button>
+
                     <img class="champ-img default" src="${defaultImg}" alt="${champ.name}">
                     <img class="champ-img hover" src="${hoverImg}" alt="${champ.name} skin">
                     ${priceHTML}
@@ -126,6 +128,20 @@ const renderChampions = (champions) => {
     }).join('');
 
     setupClickEvents();
+};
+
+const setupFavButtons = () => {
+    const favButtons = document.querySelectorAll('.fav-btn');
+
+    favButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            btn.classList.toggle('active');
+
+            const id = btn.getAttribute('data-id');
+            console.log("Favori :", id);
+        });
+    });
 };
 
 const setupClickEvents = () => {
