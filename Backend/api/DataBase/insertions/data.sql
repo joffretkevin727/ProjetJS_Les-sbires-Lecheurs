@@ -252,15 +252,6 @@ VALUES
     'RP',
     'Féminin',
     'manifestation'),
-    ('Draven',
-    'Difficile',
-    "À Noxus, de puissants guerriers, les « arénaires », s'affrontent dans des jeux mortels pour divertir le public. Le sang y coule à foison et leurs forces y sont éprouvées, mais aucun d'entre eux n'a jamais été aussi célèbre que Draven. Cet ancien soldat découvrit que le public appréciait particulièrement son sens du spectacle, sans parler de son habileté avec des haches tournoyantes. Épris de sa propre perfection, Draven terrasse tous ses adversaires pour s'assurer que son nom continue de résonne", 
-    975, 
-    50, 
-    0.00,
-    'RP',
-    'Masculin',
-    'humain'),
     ('Dr.Mundo',
     'Facile',
     "Totalement fou, complètement porté sur l'homicide, horriblement violet, Dr. Mundo est la principale raison pour laquelle les citoyens de Zaun restent calfeutrés chez eux les nuits les plus sombres. Désormais médecin autoproclamé, il fut autrefois un patient de l'asile tristement célèbre de Zaun. Après avoir « soigné » tout le personnel, Dr. Mundo a commencé à exercer dans les mêmes salles où il fut traité et à reproduire les méthodes immorales dont il fut lui-même si souvent victime. Profitant d", 
@@ -270,6 +261,16 @@ VALUES
     'RP',
     'Masculin',
     'autre'),
+    ('Draven',
+    'Difficile',
+    "À Noxus, de puissants guerriers, les « arénaires », s'affrontent dans des jeux mortels pour divertir le public. Le sang y coule à foison et leurs forces y sont éprouvées, mais aucun d'entre eux n'a jamais été aussi célèbre que Draven. Cet ancien soldat découvrit que le public appréciait particulièrement son sens du spectacle, sans parler de son habileté avec des haches tournoyantes. Épris de sa propre perfection, Draven terrasse tous ses adversaires pour s'assurer que son nom continue de résonne", 
+    975, 
+    50, 
+    0.00,
+    'RP',
+    'Masculin',
+    'humain'),
+    
     ('Ekko',
     'Moyen',
     "Jeune prodige des rues mal famées de Zaun, Ekko est capable de manipuler le temps pour renverser toute situation dangereuse à son avantage. Il utilise sa propre invention, la clepsydre-zéro, pour explorer les différents possibles de la réalité, sculptant ainsi des moments parfaits qui donnent l'impression qu'il réussit l'impossible du premier coup, à chaque fois. Bien qu'Ekko aime sa liberté, lorsque ses proches sont menacés, lui et les Feux volants sont prêts à tout pour les défendre.", 
@@ -1606,9 +1607,9 @@ INSERT INTO champion_roles (champion_id, role_id) VALUES
 (26, 6), -- Darius -> Tank
 (27, 1), -- Diana -> Assassin
 (27, 2), -- Diana -> Combattant
-(28, 4), -- Draven -> Tireur
-(29, 2), -- Dr.Mundo -> Combattant
-(29, 6), -- Dr.Mundo -> Tank
+(28, 2), -- Dr.Mundo -> Combattant
+(28, 6), -- Dr.Mundo -> Tank
+(29, 4), -- Draven -> Tireur
 (30, 1), -- Ekko -> Assassin
 (30, 3), -- Ekko -> Mage
 (31, 1), -- Elise -> Assassin
@@ -1656,28 +1657,28 @@ INSERT INTO champion_roles (champion_id, role_id) VALUES
 (54, 3), -- Jhin -> Mage
 (54, 4), -- Jhin -> Tireur
 (55, 4), -- Jinx -> Tireur
-(56, 3), -- Kai'sa -> Mage
-(56, 4), -- Kai'sa -> Tireur
-(57, 4), -- Kalista -> Tireur
-(58, 3), -- Karma -> Mage
-(58, 5), -- Karma -> Support
-(59, 3), -- Karthus -> Mage
-(60, 1), -- Kassadin -> Assassin
-(60, 3), -- Kassadin -> Mage
-(61, 1), -- Katarina -> Assassin
-(61, 3), -- Katarina -> Mage
-(62, 3), -- Kayle -> Mage
-(62, 4), -- Kayle -> Tireur
-(63, 1), -- Kayn -> Assassin
-(63, 2), -- Kayn -> Combattant
-(64, 3), -- Kennen -> Mage
-(65, 1), -- Kha'zix -> Assassin
-(66, 4), -- Kindred -> Tireur
-(67, 2), -- Kled -> Combattant
-(68, 3), -- Kog'Maw -> Mage
-(68, 4), -- Kog'Maw -> Tireur
-(69, 2), -- K'sante -> Combattant
-(69, 6), -- K'sante -> Tank
+(56, 2), -- K'sante -> Combattant
+(56, 6), -- K'sante -> Tank
+(57, 3), -- Kai'sa -> Mage
+(57, 4), -- Kai'sa -> Tireur
+(58, 4), -- Kalista -> Tireur
+(59, 3), -- Karma -> Mage
+(59, 5), -- Karma -> Support
+(60, 3), -- Karthus -> Mage
+(61, 1), -- Kassadin -> Assassin
+(61, 3), -- Kassadin -> Mage
+(62, 1), -- Katarina -> Assassin
+(62, 3), -- Katarina -> Mage
+(63, 3), -- Kayle -> Mage
+(63, 4), -- Kayle -> Tireur
+(64, 1), -- Kayn -> Assassin
+(64, 2), -- Kayn -> Combattant
+(65, 3), -- Kennen -> Mage
+(66, 1), -- Kha'zix -> Assassin
+(67, 4), -- Kindred -> Tireur
+(68, 2), -- Kled -> Combattant
+(69, 3), -- Kog'Maw -> Mage
+(69, 4), -- Kog'Maw -> Tireur
 (70, 1), -- Leblanc -> Assassin
 (70, 3), -- Leblanc -> Mage
 (71, 1), -- Lee Sin -> Assassin
@@ -1693,13 +1694,13 @@ INSERT INTO champion_roles (champion_id, role_id) VALUES
 (76, 5), -- Lulu -> Support
 (77, 3), -- Lux -> Mage
 (77, 5), -- Lux -> Support
-(78, 1), -- Maitre Yi -> Assassin
-(78, 2), -- Maitre Yi -> Combattant
-(79, 3), -- Malphite -> Mage
-(79, 6), -- Malphite -> Tank
-(80, 3), -- Malzahar -> Mage
-(81, 5), -- Maokai -> Support
-(81, 6), -- Maokai -> Tank
+(78, 3), -- Malphite -> Mage
+(78, 6), -- Malphite -> Tank
+(79, 3), -- Malzahar -> Mage
+(80, 5), -- Maokai -> Support
+(80, 6), -- Maokai -> Tank
+(81, 1), -- Maitre Yi -> Assassin
+(81, 2), -- Maitre Yi -> Combattant
 (82, 3), -- Mel -> Mage
 (82, 5), -- Mel -> Support
 (83, 3), -- Milio -> Mage

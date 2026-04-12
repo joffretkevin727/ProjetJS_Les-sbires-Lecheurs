@@ -15,6 +15,7 @@ const getChampionById = (id) => {
         SELECT c.*, ci.url_centered, ci.url_loadscreen, 
         (SELECT JSON_ARRAYAGG(
             JSON_OBJECT(
+                'id', s.id, /* <--- AJOUTE CETTE LIGNE ICI */
                 'url_centered', s.url_centered,
                 'url_loadscreen', s.url_loadscreen
             )
@@ -106,27 +107,37 @@ const getSimilarChampions = (id) => {
 };
 
 const filterChampions = (filters) => {
-    let query = 'SELECT * FROM champions WHERE 1=1';
-    const values = [];
+    // On part d'une requête de base qui récupère aussi l'image par défaut
+    let query = `
+        SELECT c.*, ci.url_loadscreen 
+        FROM champions c 
+        LEFT JOIN champion_images ci ON ci.champion_id = c.id 
+        WHERE 1=1`;
+    let values = [];
 
-    if (filters.difficulte) {
-        query += ' AND difficulte = ?';
-        values.push(filters.difficulte);
+    // Filtre par Rôles (Jointure nécessaire)
+    if (filters.roles) {
+        const rolesArray = filters.roles.split(',');
+        query += ` AND c.id IN (
+            SELECT champion_id FROM champion_roles cr 
+            JOIN roles r ON r.id = cr.role_id 
+            WHERE r.nom IN (?)
+        )`;
+        values.push(rolesArray);
     }
-    if (filters.genre) {
-        query += ' AND genre = ?';
-        values.push(filters.genre);
+
+    // Filtre par Difficultés
+    if (filters.difficultes) {
+        const diffArray = filters.difficultes.split(',');
+        query += ` AND c.difficulte IN (?)`;
+        values.push(diffArray);
     }
-    if (filters.espece) {
-        query += ' AND espece = ?';
-        values.push(filters.espece);
-    }
-    if (filters.role) {
-        query += ` AND id IN (
-            SELECT champion_id FROM champion_roles cr
-            JOIN roles r ON r.id = cr.role_id
-            WHERE r.nom = ?)`;
-        values.push(filters.role);
+
+    // Filtre par Genres
+    if (filters.genres) {
+        const genreArray = filters.genres.split(',');
+        query += ` AND c.genre IN (?)`;
+        values.push(genreArray);
     }
 
     return db.query(query, values);
@@ -135,6 +146,15 @@ const filterChampions = (filters) => {
 const sortChampions = (order) => {
     const direction = order === 'desc' ? 'DESC' : 'ASC';
     return db.query(`SELECT * FROM champions ORDER BY price ${direction}`);
+};
+
+const applyRandomPromotions = async () => {
+    await db.query("UPDATE champions SET reduction = 0"); // Reset
+    return db.query(`
+        UPDATE champions 
+        SET reduction = ELT(FLOOR(1 + (RAND() * 4)), 10, 20, 50, 75)
+        WHERE id IN (SELECT id FROM (SELECT id FROM champions ORDER BY RAND() LIMIT 10) as t)
+    `); // Applique 10 réductions
 };
 
 // ==================
@@ -158,17 +178,33 @@ const createUser = (name, lastname, email, password) => {
 
 const getPanierByUser = (user_id) => {
     return db.query(`
-        SELECT p.*, c.name, c.price, ci.url_centered, ci.url_loadscreen
+        SELECT 
+            p.id, 
+            p.quantite,
+            p.skin_id,
+            c.name AS champion_name, 
+            c.price, 
+            c.reduction,
+            -- Calcul du prix remisé si une réduction existe
+            CASE 
+                WHEN c.reduction > 0 THEN FLOOR(c.price * (1 - c.reduction / 100))
+                ELSE c.price 
+            END AS final_price,
+            c.devise,
+            COALESCE(s.url_loadscreen, ci.url_loadscreen) AS final_url_loadscreen
         FROM panier p
         JOIN champions c ON c.id = p.champion_id
-        LEFT JOIN champion_images ci ON ci.champion_id = p.champion_id
+        LEFT JOIN champion_images ci ON ci.champion_id = c.id
+        LEFT JOIN skins s ON s.id = p.skin_id
         WHERE p.user_id = ?`, [user_id]);
 };
 
 const addToPanier = (user_id, champion_id, skin_id, quantite) => {
+    // On s'assure que skin_id est null si aucun skin n'est sélectionné
+    const finalSkinId = skin_id === "original" || !skin_id ? null : skin_id;
     return db.query(
         'INSERT INTO panier (user_id, champion_id, skin_id, quantite) VALUES (?, ?, ?, ?)',
-        [user_id, champion_id, skin_id, quantite]
+        [user_id, champion_id, finalSkinId, quantite]
     );
 };
 
@@ -178,6 +214,10 @@ const updatePanier = (id, quantite) => {
 
 const deleteFromPanier = (id) => {
     return db.query('DELETE FROM panier WHERE id = ?', [id]);
+};
+
+const clearPanier = (user_id) => {
+    return db.query('DELETE FROM panier WHERE user_id = ?', [user_id]);
 };
 
 // ==================
@@ -192,14 +232,22 @@ const createCommande = (user_id, adresse_id, total) => {
     );
 };
 
+const createCommandeItem = (commande_id, champion_id, skin_id, quantite, price) => {
+    return db.query(
+        `INSERT INTO commande_items (commande_id, champion_id, skin_id, quantite, price_unity)
+         VALUES (?, ?, ?, ?, ?)`,
+        [commande_id, champion_id, skin_id, quantite, price]
+    );
+};
+
 const getCommandesByUser = (user_id) => {
     return db.query('SELECT * FROM commandes WHERE user_id = ?', [user_id]);
 };
 
 const updateStock = (champion_id, quantite) => {
     return db.query(
-        'UPDATE champions SET stock = stock - ? WHERE id = ?',
-        [quantite, champion_id]
+        'UPDATE champions SET stock = stock - ? WHERE id = ? AND stock >= ?',
+        [quantite, champion_id, quantite]
     );
 };
 
@@ -251,13 +299,16 @@ module.exports = {
     getSimilarChampions,
     filterChampions,
     sortChampions,
+    applyRandomPromotions,
     getUserByEmail,
     createUser,
     getPanierByUser,
     addToPanier,
     updatePanier,
     deleteFromPanier,
+    clearPanier,
     createCommande,
+    createCommandeItem,
     getCommandesByUser,
     updateStock,
     getFavorisByUser,
