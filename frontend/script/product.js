@@ -157,17 +157,29 @@ async function confirmSelection() {
     }
 
     try {
+        const cleanChampId = parseInt(champId);
+        if (isNaN(cleanChampId)) {
+            alert("Erreur : ID du champion invalide.");
+            return;
+        }
+
         for (const item of pendingSelection) {
-            await fetch('http://localhost:6767/panier', {
+            const response = await fetch('http://localhost:6767/panier', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     user_id: user.id,
-                    champion_id: parseInt(champId),
-                    skin_id: item.realSkinId, // Envoie l'ID unique (ou null si original)
+                    champion_id: cleanChampId,
+                    skin_id: item.realSkinId || null, // On force le null si undefined
                     quantite: 1
                 })
             });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error("Détail erreur serveur :", errorData);
+                throw new Error("Erreur lors de l'insertion");
+            }
         }
 
         pendingSelection = [];

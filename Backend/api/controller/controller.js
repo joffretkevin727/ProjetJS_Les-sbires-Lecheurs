@@ -190,16 +190,18 @@ const getPanier = async (req, res) => {
     }
 };
 
+// controller.js
 const addToPanier = async (req, res) => {
     try {
         const { user_id, champion_id, skin_id, quantite } = req.body;
-        if (!user_id || !champion_id || !quantite) {
-            return res.status(400).json({ code: '400', message: 'Champs manquants' });
-        }
-        await model.addToPanier(user_id, champion_id, skin_id || null, quantite);
-        res.status(201).json({ code: '201', message: 'Ajouté au panier' });
+        await model.addToPanier(user_id, champion_id, skin_id, quantite);
+        res.status(201).json({ message: 'OK' });
     } catch (error) {
-        res.status(500).json({ code: '500', message: 'Erreur serveur', error });
+        // C'est ce message qui va nous donner la solution
+        console.log("----- ERREUR SQL DÉTAILLÉE -----");
+        console.log(error.sqlMessage); 
+        console.log("-------------------------------");
+        res.status(500).json({ message: 'Erreur SQL', detail: error.sqlMessage });
     }
 };
 
