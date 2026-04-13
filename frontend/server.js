@@ -36,3 +36,7 @@ app.get('/delivery', (req, res) => {
 });
 
 app.listen(6969, () => console.log("Serveur : http://localhost:6969/catalogue"));
+
+app.get('/favoris', (req, res) => {
+    res.sendFile(path.join(__dirname, 'template/favoris.html'));
+});
