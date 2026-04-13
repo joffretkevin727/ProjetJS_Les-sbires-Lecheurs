@@ -257,13 +257,20 @@ const updateStock = (champion_id, quantite) => {
 
 const getFavorisByUser = (user_id) => {
     return db.query(`
-        SELECT f.*, c.name, c.price, ci.url_centered, ci.url_loadscreen
+        SELECT 
+            f.id AS favori_id, 
+            f.champion_id, 
+            c.name, 
+            c.price, 
+            c.reduction, 
+            c.devise,
+            ci.url_loadscreen,
+            (SELECT s.url_loadscreen FROM skins s WHERE s.champion_id = c.id LIMIT 1) AS skin_hover
         FROM favoris f
         JOIN champions c ON c.id = f.champion_id
         LEFT JOIN champion_images ci ON ci.champion_id = f.champion_id
         WHERE f.user_id = ?`, [user_id]);
 };
-
 const addFavori = (user_id, champion_id) => {
     return db.query(
         'INSERT INTO favoris (user_id, champion_id) VALUES (?, ?)',
